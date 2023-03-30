@@ -1,0 +1,239 @@
+### user 
+POST http://localhost:3000/users/register
+Content-Type: application/json
+
+{
+    "name": "deepak",
+    "email": "deepak@gmail.com",
+    "password":"Deepak123",
+    "subjects": "Mathematics",
+    "classes": "class 1"
+}
+###
+POST http://localhost:3000/users/teachers/add-subjects-classes
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MTFjZDBiN2U0NmY4YWNhY2JmZjkwNyIsImlhdCI6MTY3ODg4ODcwN30.REB9k20KvK8aJInenRVQjQjx86Ml_UoufzYSn6tZfds
+
+{
+    "subjects": "science",
+    "classes": "class 2"
+}
+###
+POST http://localhost:3000/create
+Content-Type: application/json
+
+{
+  "className": "BBA",
+  "days": [
+    {
+      "day": "Monday",
+      "periods": [
+        {
+          "subject": "Mathematics",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "_id": "640c2708c576803dbde5bb49"
+        },
+        {
+          "subject": "Mathematics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "_id": "640c2708c576803dbde5bb4a"
+        },
+        {
+          "subject": "commerce",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "_id": "640c2708c576803dbde5bb4b"
+        },
+        {
+          "subject": "Social Studies",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "_id": "640c2708c576803dbde5bb4c"
+        },
+        {
+          "subject": "Physical Education",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "_id": "640c2708c576803dbde5bb4d"
+        }
+      ],
+      "_id": "640c2708c576803dbde5bb48"
+    },
+    {
+      "day": "Tuesday",
+      "periods": [
+        {
+          "subject": "Chemistry",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "_id": "640c2708c576803dbde5bb49"
+        },
+        {
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "_id": "640c2708c576803dbde5bb4a"
+        },
+        {
+          "subject": "History",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "_id": "640c2708c576803dbde5bb4b"
+        },
+        {
+          "subject": "Geography",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "_id": "640c2708c576803dbde5bb4c"
+        },
+        {
+          "subject": "Art",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "_id": "640c2708c576803dbde5bb4d"
+        }
+      ],
+      "_id": "640c2708c576803dbde5bb48"
+    },
+    {
+      "day": "Wednesday",
+      "periods": [
+        {
+          "subject": "English",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "_id": "640c2708c576803dbde5bb49"
+        },
+        {
+          "subject": "English",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "_id": "640c2708c576803dbde5bb4a"
+        },
+        {
+          "subject": "Biology",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "_id": "640c2708c576803dbde5bb4b"
+        },
+        {
+          "subject": "Computer Science",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "_id": "640c2708c576803dbde5bb4c"
+        },
+        {
+          "subject": "Music",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "_id": "640c2708c576803dbde5bb4d"
+        }
+      ],
+      "_id": "640c2708c576803dbde5bb48"
+    },
+    {
+      "day": "Thursday",
+      "periods": [
+        {
+          "subject": "Economics",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "_id": "640c2708c576803dbde5bb49"
+        },
+        {
+          "subject": "Economics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "_id": "640c2708c576803dbde5bb4a"
+        },
+        {
+          "subject": "Chemistry",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "_id": "640c2708c576803dbde5bb4b"
+        },
+        {
+          "subject": "Physics",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "_id": "640c2708c576803dbde5bb4c"
+        },
+        {
+          "subject": "Drama",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "_id": "640c2708c576803dbde5bb4d"
+        }
+      ],
+      "_id": "640c2708c576803dbde5bb48"
+    },
+    {
+      "day": "Friday",
+      "periods": [
+        {
+          "subject": "Biology",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "_id": "640c2708c576803dbde5bb49"
+        },
+        {
+          "subject": "English",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "_id": "640c2708c576803dbde5bb4a"
+        },
+        {
+          "subject": "Computer Science",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "_id": "640c2708c576803dbde5bb4b"
+        },
+        {
+          "subject": "Psychology",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "_id": "640c2708c576803dbde5bb4c"
+        },
+        {
+          "subject": "Music",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "_id": "640c2708c576803dbde5bb4d"
+        }
+      ],
+      "_id": "640c2708c576803dbde5bb48"
+    }
+  ],
+  "start_time": "08:00",
+  "end_time": "15:00"
+}
+###
+PATCH http://localhost:3000/api/timetable/6406efd86bf606885ad08073
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MDZkOGU3NjhhZTc2ZjM5NzU4NWEwNCIsImlhdCI6MTY3ODE3MDM3OH0.FyJFognNBQsfCsboKKPWmKY46_e8McaCgxgo5dDoroM
+Content-Type: application/json
+
+{
+    "field": "start_time",
+    "value": "10:30am"
+}
+###
+GET http://localhost:3000/users/timetable
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MWRjZGJkZGRlMWNhMDJlMGQ2YmU2OSIsImlhdCI6MTY3OTY3NTIwOX0.EohANSIIrkU5aM5-sXdFABcD6_8_xlvatqVdBaZ-Q0M
+###
+POST http://localhost:3000/users/signin
+Content-Type: application/json
+
+{
+    "email": "deepak@gmail.com",
+    "password":"Deepak123"
+}
+###
+
+POST http://localhost:3000/teacher-timetable
+Content-Type: application/json
+
+{
+  "email": "deepak@gmail.com"
+}
