@@ -3,6 +3,7 @@ var router = express.Router();
 const Teacher = require('../Model/Teacher');
 const Timetable = require('../Model/TimeTable');
 const TeacherTimetable = require('../Model/Teachertable');
+const Student = require('../Model/Student');
 const authenticateToken = require('../middleware/auth');
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -154,4 +155,18 @@ router.post('/teacher-timetable', async (req, res) => {
   }
 });
 
+
+router.get('/timetables', authenticateToken, async (req, res) => {
+  try {
+    const _id = req.user.id
+    const user = await Student.findOne({ _id });
+    if (!user) {
+      return res.status(404).json({ message: 'Unauthorized' });
+    }
+    const timetables = await Timetable.find();
+    res.status(200).json(timetables);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 module.exports = router;
