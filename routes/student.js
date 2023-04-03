@@ -1,6 +1,7 @@
 var express = require('express');
 const Student = require('../Model/Student');
 const Timetable = require('../Model/TimeTable');
+const Teacher = require('../Model/Teacher');
 const bcrypt = require('bcryptjs')
 const JWT = require('jsonwebtoken')
 const authenticateToken = require('../middleware/auth');
@@ -87,23 +88,18 @@ router.post('/signin', async (req, res) => {
     }
 });
 
-//get a student's timetable
-router.get('/timetable', authenticateToken, async (req, res) => {
+//get timetable
+router.get('/timetable/:name', authenticateToken, async (req, res) => {
     try {
         const _id = req.user.id
-        const user = await Student.findOne({ _id });
-        if (!user) {
+        const { name } = req.params
+        const User = await Student.findOne({ _id });
+        const teacher = await Teacher.findOne({ _id });
+        if (!teacher && !User) {
             return res.status(404).json({ message: 'Unauthorized' });
         }
-        // Find the student with the given class
-        const student = await Student.findOne({ class: user.class });
-
-        // If the student does not exist, return a 404 Not Found response
-        if (!student) {
-            return res.status(404).json({ message: 'Student not found' });
-        }
         // Find the timetable for the student's class
-        const timetable = await Timetable.findOne({ class: student.class })
+        const timetable = await Timetable.findOne({ class: name })
         // If the timetable does not exist, return a 404 Not Found response
         if (!timetable) {
             return res.status(404).json({ message: 'Timetable not found' });
