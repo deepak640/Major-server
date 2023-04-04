@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node app.js",
+    "start": "node ./bin/www",
     "build": "echo success",
     "test": "echo \"ERROR: no test specified\" && exit 1"
   },
