@@ -42,11 +42,8 @@ router.post('/register', async (req, res) => {
                 res.json({ error: "somthing went wrong" })
             }
             res.json({
-                name,
                 class: classes,
-                email,
-                enroll_no,
-                password: hashedPassword, auth: token
+                auth: token
             })
         })
     } catch (error) {
