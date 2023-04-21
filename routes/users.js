@@ -36,7 +36,7 @@ router.post('/register', async (req, res) => {
       if (err) {
         res.json({ error: "somthing went wrong" })
       }
-      res.json({ Number: user.class, subject: user.subjects, Email: user.email, auth: token })
+      res.json({ Number: user.class, name: user.name, Email: user.email, auth: token })
     })
 
   } catch (error) {
@@ -112,8 +112,8 @@ router.post('/teachers/add-subjects-classes', authenticateToken, async (req, res
 router.get('/timetable', authenticateToken, async (req, res) => {
   const id = req.user.id
   try {
-    const timetable = await TeacherTable.find({teacher: id});
-    res.json(timetable[0]);
+    const timetable = await TeacherTable.find({ teacher: id });
+    res.json(timetable[ 0 ]);
   } catch (error) {
     res.status(500).send(error.message);
   }

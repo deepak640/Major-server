@@ -42,6 +42,8 @@ router.post('/register', async (req, res) => {
                 res.json({ error: "somthing went wrong" })
             }
             res.json({
+                name,
+                email,
                 class: classes,
                 auth: token
             })
@@ -76,7 +78,8 @@ router.post('/signin', async (req, res) => {
             if (err) {
                 res.json({ error: "somthing went wrong" })
             }
-            res.json({ class: student.class, auth: token })
+            res.json({ name: student.name, email:student.email, class: student.class, auth: token
+            })
         })
 
     } catch (error) {
