@@ -52,12 +52,12 @@ router.post('/signin', async (req, res) => {
     // Check if teacher exists
     let existingTeacher = await Teacher.findOne({ email });
     if (!existingTeacher) {
-      return res.status(400).json({ error: 'Invalid credentials' });
+      return res.status(401).json({ error: 'Invalid credentials' });
     }
     // Check password
     const isMatch = await bcrypt.compare(password, existingTeacher.password);
     if (!isMatch) {
-      return res.status(400).json({ error: 'Invalid credentials' });
+      return res.status(401).json({ error: 'Invalid credentials' });
     }
 
     // Create and sign JWT token

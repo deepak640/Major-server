@@ -12,7 +12,10 @@ router.get('/', function (req, res, next) {
 
 // timetable creation
 router.post('/create', async (req, res) => {
-
+  const { className, days, start_time, end_time } = req.body
+  if (!className || !days || !start_time || !end_time) {
+    return res.status(401).json({ error: "please fill data" })
+  }
   try {
     const className = req.body.className;
 
@@ -170,5 +173,13 @@ router.get('/timetables', authenticateToken, async (req, res) => {
   }
 });
 
-
+router.get('/record', async (req, res) => {
+  try {
+    const student = await Student.find()
+    const teacher = await Teacher.find()
+    res.status(200).json({ student, teacher })
+  } catch (error) {
+    console.log(error)
+  }
+})
 module.exports = router;
