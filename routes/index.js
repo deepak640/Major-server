@@ -14,7 +14,7 @@ router.get('/', function (req, res, next) {
 router.post('/create', async (req, res) => {
   const { className, days, start_time, end_time } = req.body
   if (!className || !days || !start_time || !end_time) {
-    return res.status(401).json({ error: "please fill data" })
+    return res.status(400).json({ error: "please fill data" })
   }
   try {
     const className = req.body.className;
@@ -182,4 +182,23 @@ router.get('/record', async (req, res) => {
     console.log(error)
   }
 })
+
+router.post('/deleteUser', async (req, res) => {
+  const { accountType, email } = req.body;
+
+  try {
+    if (accountType === 'student') {
+      await Student.deleteOne({ email: email });
+    } else if (accountType === 'teacher') {
+      await Teacher.deleteOne({ email: email });
+    } else {
+      return res.status(400).json({ error: 'Invalid account type.' });
+    }
+    return res.status(200).json({ message: 'User deleted successfully.' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error.' });
+  }
+});
+
 module.exports = router;
