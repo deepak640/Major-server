@@ -26,7 +26,7 @@ router.post('/register', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // Create new teacher
-    const newTeacher = new Teacher({ name, email, password: hashedPassword, subjects, class: classes });
+    const newTeacher = new Teacher({ name, email, password: hashedPassword, subjects });
 
     // Save teacher to database
     const user = await newTeacher.save();

@@ -5,7 +5,6 @@ const teacherSchema = new mongoose.Schema({
     email: { type: String },
     password: { type: String },
     subjects: { type: String },
-    class: { type: String },
     timetable: { type: mongoose.Schema.Types.ObjectId, ref: 'Timetable' },
 });
 

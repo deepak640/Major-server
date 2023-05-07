@@ -187,9 +187,9 @@ router.post('/deleteUser', async (req, res) => {
   const { accountType, email } = req.body;
 
   try {
-    if (accountType === 'student') {
+    if (accountType === 'Student') {
       await Student.deleteOne({ email: email });
-    } else if (accountType === 'teacher') {
+    } else if (accountType === 'Teacher') {
       await Teacher.deleteOne({ email: email });
     } else {
       return res.status(400).json({ error: 'Invalid account type.' });
