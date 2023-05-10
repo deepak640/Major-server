@@ -13,7 +13,7 @@ const daySchema = new mongoose.Schema({
 });
 
 const teacherTimetableSchema = new mongoose.Schema({
-    teacher_email: { type: String },
+    teacheremail: { type: String },
     teacher: { type: mongoose.Schema.Types.ObjectId, ref: 'Teacher' },
     days: { type: [ daySchema ] }
 });

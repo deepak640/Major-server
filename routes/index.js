@@ -145,13 +145,14 @@ router.post('/teacher-timetable', async (req, res) => {
 
     // create a new instance of TeacherTimetable model and save it to the database
     const newTeacherTimetable = new TeacherTimetable({
+      teacheremail: teacherEmail,
       teacher: teacher._id,
       days: teacherTimetable.days,
     });
 
     await newTeacherTimetable.save();
 
-    res.json(teacherTimetable.days); // return the teacher timetable in the required format as a JSON response
+    res.json(teacherTimetable); // return the teacher timetable in the required format as a JSON response
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal server error' });
@@ -173,7 +174,7 @@ router.get('/timetables', authenticateToken, async (req, res) => {
   }
 });
 
-router.get('/record', async (req, res) => {
+router.get('/Userrecord', async (req, res) => {
   try {
     const student = await Student.find()
     const teacher = await Teacher.find()
@@ -201,4 +202,13 @@ router.post('/deleteUser', async (req, res) => {
   }
 });
 
+router.get('/Tablerecord', async (req, res) => {
+  try {
+    const student = await Timetable.find()
+    const teacher = await TeacherTimetable.find()
+    res.json({ student, teacher })
+  } catch (error) {
+    console.log(error)
+  }
+})
 module.exports = router;
