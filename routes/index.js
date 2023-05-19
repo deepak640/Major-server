@@ -202,6 +202,24 @@ router.post('/deleteUser', async (req, res) => {
   }
 });
 
+router.post('/deleteTable', async (req, res) => {
+  const { type, name } = req.body;
+
+  try {
+    if (type === 'class') {
+      await Timetable.deleteOne({ class: name });
+    } else if (type === 'Teacher') {
+      await TeacherTimetable.deleteOne({ teacheremail: name });
+    } else {
+      return res.status(400).json({ error: 'Invalid account type.' });
+    }
+    return res.status(200).json({ message: 'User deleted successfully.' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error.' });
+  }
+});
+
 router.get('/Tablerecord', async (req, res) => {
   try {
     const student = await Timetable.find()
