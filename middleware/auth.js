@@ -1,19 +1,30 @@
 const jwt = require('jsonwebtoken');
 
-function authenticateToken(req, res, next) {
+
+const authenticateToken = (req, res, next) => {
     const authHeader = req.headers[ 'authorization' ];
     const token = authHeader && authHeader.split(' ')[ 1 ];
-
     if (!token) {
-        return res.status(401).json({ error: 'no token' });
+        return res.status(401).json({ message: 'Unauthorized' });
     }
-    jwt.verify(token, process.env.KEY, (error, user) => {
-        if (error) {
-            return res.status(401).json({ error: 'error' });
-        }
-        req.user = user;
-        next();
-    });
-}
 
+    try {
+        // Verify the admin token
+        const adminPayload = jwt.verify(token, process.env.ADMIN_KEY);
+        // Proceed with the request for admin
+        req.user = adminPayload;
+        next();
+    } catch (adminError) {
+        try {
+            // Verify the user token
+            const userPayload = jwt.verify(token, process.env.USER_KEY);
+
+            // Proceed with the request for user
+            req.user = userPayload;
+            next();
+        } catch (userError) {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+    }
+};
 module.exports = authenticateToken;

@@ -37,7 +37,7 @@ router.post('/register', async (req, res) => {
         });
 
         await newStudent.save();
-        JWT.sign({ id: newStudent._id }, process.env.KEY, (err, token) => {
+        JWT.sign({ id: newStudent._id }, process.env.USER_KEY, (err, token) => {
             if (err) {
                 res.json({ error: "somthing went wrong" })
             }
@@ -74,7 +74,7 @@ router.post('/signin', async (req, res) => {
         }
 
         // Generate JWT token with student's ID as payload
-        JWT.sign({ id: student._id }, process.env.KEY, (err, token) => {
+        JWT.sign({ id: student._id }, process.env.USER_KEY, (err, token) => {
             if (err) {
                 res.json({ error: "somthing went wrong" })
             }

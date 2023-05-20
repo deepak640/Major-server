@@ -32,7 +32,7 @@ router.post('/register', async (req, res) => {
     const user = await newTeacher.save();
 
     // Create and sign JWT token
-    JWT.sign({ id: user._id }, process.env.KEY, (err, token) => {
+    JWT.sign({ id: user._id }, process.env.USER_KEY, (err, token) => {
       if (err) {
         res.json({ error: "somthing went wrong" })
       }
@@ -52,16 +52,16 @@ router.post('/signin', async (req, res) => {
     // Check if teacher exists
     let existingTeacher = await Teacher.findOne({ email });
     if (!existingTeacher) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      return res.status(401).json({ error: 'd Invalid credentials' });
     }
     // Check password
     const isMatch = await bcrypt.compare(password, existingTeacher.password);
     if (!isMatch) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      return res.status(401).json({ error: 'p Invalid credentials' });
     }
 
     // Create and sign JWT token
-    JWT.sign({ id: existingTeacher._id }, process.env.KEY, (err, token) => {
+    JWT.sign({ id: existingTeacher._id }, process.env.USER_KEY, (err, token) => {
       if (err) {
         res.json({ error: "couldnt generate id" })
       }

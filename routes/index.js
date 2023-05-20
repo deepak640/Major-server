@@ -4,10 +4,26 @@ const Teacher = require('../Model/Teacher');
 const Timetable = require('../Model/TimeTable');
 const TeacherTimetable = require('../Model/Teachertable');
 const Student = require('../Model/Student');
+const jwt = require('jsonwebtoken');
 const authenticateToken = require('../middleware/auth');
 /* GET home page. */
 router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
+});
+// Admin Signin 
+router.post('/admin/login', (req, res) => {
+  // Perform admin authentication logic here
+  const generateAdminToken = () => {
+    const adminPayload = {
+      isAdmin: true
+    };
+    if(req.body.email === 'deepak@gmail.com' && req.body.password === 'admin123')
+    return jwt.sign(adminPayload, process.env.ADMIN_KEY);
+  };
+  // If authentication is successful, generate the admin token
+  const adminToken = generateAdminToken();
+  // Return the admin token as a response
+  res.json({ auth: adminToken });
 });
 
 // timetable creation
@@ -160,19 +176,25 @@ router.post('/teacher-timetable', async (req, res) => {
 });
 
 
-router.get('/timetables', authenticateToken, async (req, res) => {
+router.get('/timetables',authenticateToken, async (req, res) => {
   try {
-    const _id = req.user.id
-    const user = await Student.findOne({ _id });
-    if (!user) {
-      return res.status(404).json({ message: 'Unauthorized' });
-    }
-    const timetables = await Timetable.find();
-    res.status(200).json(timetables);
+    const classes = await Timetable.find();
+    const classArray = Object.values(classes);
+
+    const teachers = await TeacherTimetable.find();
+    const teacherArray = Object.values(teachers);
+
+    const mergedData = [ ...classArray, ...teacherArray ].reduce((acc, item, index) => {
+      acc[ index ] = item;
+      return acc;
+    }, {});
+
+    res.status(200).json(mergedData);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
+
 
 router.get('/Userrecord', async (req, res) => {
   try {
@@ -229,4 +251,5 @@ router.get('/Tablerecord', async (req, res) => {
     console.log(error)
   }
 })
+
 module.exports = router;
