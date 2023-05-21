@@ -73,47 +73,11 @@ router.post('/signin', async (req, res) => {
   }
 });
 
-/* add-subjects-classes */
-router.post('/teachers/add-subjects-classes', authenticateToken, async (req, res) => {
-  const { subjects, classes } = req.body;
-  const _id = req.user.id;
-
+router.get('/timetable/:name', authenticateToken, async (req, res) => {
+  const email = `${req.params.name}@gmail.com`
   try {
-    // Find the teacher by their email address
-    const teacher = await Teacher.findOne({ _id });
-    if (!teacher) {
-      return res.status(404).json({ message: 'Teacher not found' });
-    }
-
-    // Check if the new subjects and classes already exist in the teacher's array
-    const existingSubjects = teacher.subjects.filter(subject => subjects.includes(subject));
-    const existingClasses = teacher.classes.filter(cls => classes.includes(cls));
-
-    // If there are any existing subjects or classes, return an error message
-    if (existingSubjects.length > 0 || existingClasses.length > 0) {
-      const existingItems = [ existingSubjects, existingClasses ];
-      return res.status(400).json({ message: `The following items already exist for this teacher: ${existingItems.join(', ')}` });
-    }
-
-    // Push the new subjects and classes to the teacher's array
-    teacher.subjects.push(subjects);
-    teacher.classes.push(classes);
-
-    // Save the updated teacher to the database
-    await teacher.save();
-
-    return res.status(200).json({ message: 'Subjects and classes added to teacher' });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: 'Server error' });
-  }
-});
-
-router.get('/timetable', authenticateToken, async (req, res) => {
-  const id = req.user.id
-  try {
-    const timetable = await TeacherTable.find({ teacher: id });
-    res.json(timetable[ 0 ]);
+    const timetable = await TeacherTable.find({ teacheremail: email });
+    res.json(timetable[0]);
   } catch (error) {
     res.status(500).send(error.message);
   }

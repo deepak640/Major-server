@@ -41,12 +41,7 @@ router.post('/register', async (req, res) => {
             if (err) {
                 res.json({ error: "somthing went wrong" })
             }
-            res.json({
-                name,
-                email,
-                class: classes,
-                auth: token
-            })
+            res.json({ name, email, class: classes, auth: token })
         })
     } catch (error) {
         console.error(error);
@@ -78,7 +73,8 @@ router.post('/signin', async (req, res) => {
             if (err) {
                 res.json({ error: "somthing went wrong" })
             }
-            res.json({ name: student.name, email:student.email, class: student.class, auth: token
+            res.json({
+                name: student.name, email: student.email, class: student.class, auth: token
             })
         })
 
@@ -91,13 +87,7 @@ router.post('/signin', async (req, res) => {
 //get timetable
 router.get('/timetable/:name', authenticateToken, async (req, res) => {
     try {
-        const _id = req.user.id
         const { name } = req.params
-        const User = await Student.findOne({ _id });
-        const teacher = await Teacher.findOne({ _id });
-        if (!teacher && !User) {
-            return res.status(404).json({ message: 'Unauthorized' });
-        }
         // Find the timetable for the student's class
         const timetable = await Timetable.findOne({ class: name })
         // If the timetable does not exist, return a 404 Not Found response
