@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const periodSchema = new mongoose.Schema({
     subject: { type: String },
+    teacher: { type: String },
     start_time: { type: String },
     end_time: { type: String }
 });

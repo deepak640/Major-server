@@ -17,8 +17,8 @@ router.post('/admin/login', (req, res) => {
     const adminPayload = {
       isAdmin: true
     };
-    if(req.body.email === 'deepak@gmail.com' && req.body.password === 'admin123')
-    return jwt.sign(adminPayload, process.env.ADMIN_KEY);
+    if (req.body.email === 'deepak@gmail.com' && req.body.password === 'admin123')
+      return jwt.sign(adminPayload, process.env.ADMIN_KEY);
   };
   // If authentication is successful, generate the admin token
   const adminToken = generateAdminToken();
@@ -129,21 +129,24 @@ router.post('/teacher-timetable', async (req, res) => {
     const classesTimetable = await Timetable.find();
     const teacherTimetable = { class: '', days: [] };
 
-    // iterate through each day of the week
+    // Iterate through each day of the week
     const weekdays = [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday' ];
     for (const day of weekdays) {
       const dayTimetable = { day: day, periods: [] };
 
-      // iterate through each class timetable
+      // Iterate through each class timetable
       for (const classTimetable of classesTimetable) {
-        // iterate through each day in the class timetable
+        // Iterate through each day in the class timetable
         for (const classDay of classTimetable.days) {
           if (classDay.day === day) {
-            // iterate through each period in the day
+            // Iterate through each period in the day
             for (const classPeriod of classDay.periods) {
               const subject = classPeriod.subject;
-              // check if the teacher teaches the subject and add it to the timetable
-              if (teacherSubjects.includes(subject)) {
+
+              // Check if the teacher teaches the subject and if it's not already assigned
+              if (teacherSubjects.includes(subject) && !classPeriod.teacher) {
+                // Assign the teacher to the class timetable and store class details in teacher timetable
+                classPeriod.teacher = teacherEmail;
                 dayTimetable.periods.push({
                   class: classTimetable.class,
                   subject: subject,
@@ -156,10 +159,15 @@ router.post('/teacher-timetable', async (req, res) => {
         }
       }
 
-      teacherTimetable.days.push(dayTimetable); // add the day's timetable to the overall teacher timetable
+      teacherTimetable.days.push(dayTimetable); // Add the day's timetable to the overall teacher timetable
     }
 
-    // create a new instance of TeacherTimetable model and save it to the database
+    // Save the modified class timetables with teacher assignments
+    for (const classTimetable of classesTimetable) {
+      await classTimetable.save();
+    }
+
+    // Create a new instance of TeacherTimetable model and save it to the database
     const newTeacherTimetable = new TeacherTimetable({
       teacheremail: teacherEmail,
       teacher: teacher._id,
@@ -168,15 +176,14 @@ router.post('/teacher-timetable', async (req, res) => {
 
     await newTeacherTimetable.save();
 
-    res.json(teacherTimetable); // return the teacher timetable in the required format as a JSON response
+    res.json(teacherTimetable); // Return the teacher timetable in the required format as a JSON response
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-
-router.get('/timetables',authenticateToken, async (req, res) => {
+router.get('/timetables', authenticateToken, async (req, res) => {
   try {
     const classes = await Timetable.find();
     const classArray = Object.values(classes);
@@ -251,5 +258,8 @@ router.get('/Tablerecord', async (req, res) => {
     console.log(error)
   }
 })
+
+
+
 
 module.exports = router;
