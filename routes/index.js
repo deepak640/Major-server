@@ -5,6 +5,7 @@ const Timetable = require('../Model/TimeTable');
 const TeacherTimetable = require('../Model/Teachertable');
 const Student = require('../Model/Student');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer')
 const authenticateToken = require('../middleware/auth');
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -260,6 +261,37 @@ router.get('/Tablerecord', async (req, res) => {
 })
 
 
+router.post("/send-email", (req, res) => {
+  const { to, subject, emailhtml } = req.body;
 
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL,
+      pass: process.env.PASS,
+    },
+    tls: {
+      rejectUnauthorized: false
+    },
+    from: process.env.EMAIL,
+  });
+
+  const mailOptions = {
+    from: 'My Company <noreply@example.com>',
+    to,
+    subject,
+    html: emailhtml,
+  };
+
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({ error: "Error sending email" });
+    } else {
+      console.log(info);
+      res.json({ message: "Email sent successfully" });
+    }
+  });
+});
 
 module.exports = router;
