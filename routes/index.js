@@ -305,7 +305,7 @@ router.post('/sendpasswordlink', async (req, res) => {
     const teacher = await Teacher.findOne({ email: Email })
     const student = await Student.findOne({ email: Email })
     if (teacher || student) {
-      const token = jwt.sign({ id: (student._id || teacher._id) }, process.env.USER_KEY, { expiresIn: '1d' })
+      const token = jwt.sign({ id: (student._id || teacher._id) }, process.env.USER_KEY, { expiresIn: '120s' })
       if (token) {
         const transporter = nodemailer.createTransport({
           service: 'gmail',
