@@ -5,6 +5,8 @@ const Timetable = require('../Model/TimeTable');
 const TeacherTimetable = require('../Model/Teachertable');
 const Student = require('../Model/Student');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs')
+
 const nodemailer = require('nodemailer')
 const authenticateToken = require('../middleware/auth');
 /* GET home page. */
@@ -288,10 +290,111 @@ router.post("/send-email", (req, res) => {
       console.error(err);
       res.status(500).json({ error: "Error sending email" });
     } else {
-      console.log(info);
       res.json({ message: "Email sent successfully" });
     }
   });
+});
+
+
+router.post('/sendpasswordlink', async (req, res) => {
+  const { Email } = req.body
+  if (!Email) {
+    res.status(401).json({ message: "Enter Your Email" })
+  }
+  try {
+    const teacher = await Teacher.findOne({ email: Email })
+    const student = await Student.findOne({ email: Email })
+    if (teacher || student) {
+      const token = jwt.sign({ id: (student._id || teacher._id) }, process.env.USER_KEY, { expiresIn: '1d' })
+      if (token) {
+        const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: process.env.EMAIL,
+            pass: process.env.PASS,
+          },
+          tls: {
+            rejectUnauthorized: false
+          },
+          from: process.env.EMAIL,
+        });
+        const mailOptions = {
+          from: 'My Company <noreply@example.com>',
+          to: Email,
+          subject: "Sending Email For password Reset",
+          text: `This Link For 2 Minutes ${process.env.LINK}/forgotpassword?token=${token}`,
+        };
+
+        transporter.sendMail(mailOptions, (err, info) => {
+          if (err) {
+            console.error(err);
+            res.status(500).json({ error: "Error sending email" });
+          } else {
+            res.json({ message: "Email sent successfully" });
+          }
+        });
+      }
+    }
+  } catch (error) {
+
+  }
+})
+
+router.get('/forgotpassword/:token', async (req, res) => {
+  const { token } = req.params
+  try {
+    const decodedToken = jwt.verify(token, process.env.USER_KEY);
+    const userId = decodedToken.id;
+    const teacher = await Teacher.findOne({ _id: userId })
+    const student = await Student.findOne({ _id: userId })
+    if (teacher || student) {
+      res.status(200).json(teacher || student)
+    } else {
+      res.status(401).json({ error: "user not exist" })
+    }
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+router.post('/:token', async (req, res) => {
+  const { Password } = req.body;
+  const { token } = req.params;
+
+  try {
+    const decodedToken = jwt.verify(token, process.env.USER_KEY);
+    const userId = decodedToken.id;
+
+    let model, modelName;
+
+    // Find user in the Teacher collection
+    let user = await Teacher.findOne({ _id: userId });
+    if (user) {
+      model = Teacher;
+      modelName = 'teacher';
+    } else {
+      // Find user in the Student collection
+      user = await Student.findOne({ _id: userId });
+      if (user) {
+        model = Student;
+        modelName = 'student';
+      } else {
+        return res.json({ error: "User does not exist" });
+      }
+    }
+
+    const encryptedPass = await bcrypt.hash(Password, 10);
+    const updatedUser = await model.findByIdAndUpdate({ _id: userId }, { password: encryptedPass });
+
+    if (updatedUser) {
+      res.json({ message: `Password changed for ${modelName}` });
+    } else {
+      res.json({ error: "Failed to update password" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.json({ error: "Token verification failed" });
+  }
 });
 
 module.exports = router;

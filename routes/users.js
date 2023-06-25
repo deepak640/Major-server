@@ -77,9 +77,15 @@ router.get('/timetable/:name', authenticateToken, async (req, res) => {
   const email = `${req.params.name}@gmail.com`
   try {
     const timetable = await TeacherTable.find({ teacheremail: email });
-    res.json(timetable[0]);
+    if (timetable) {
+      res.json(timetable[ 0 ]);
+    } else {
+      
+    }
   } catch (error) {
     res.status(500).send(error.message);
   }
 });
+
+
 module.exports = router;
