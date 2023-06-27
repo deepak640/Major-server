@@ -322,7 +322,7 @@ router.post('/sendpasswordlink', async (req, res) => {
           from: 'My Company <noreply@example.com>',
           to: Email,
           subject: "Sending Email For password Reset",
-          text: `This Link For 2 Minutes ${process.env.LINK}/forgotpassword?token=${token}`,
+          html: `<h3>This Link For 2 Minutes</h3><br/> ${process.env.LINK}/forgotpassword?token=${token}`,
         };
 
         transporter.sendMail(mailOptions, (err, info) => {
