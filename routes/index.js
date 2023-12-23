@@ -267,7 +267,9 @@ router.post("/send-email", (req, res) => {
   const { to, subject, emailhtml } = req.body;
 
   const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host:'smtp.gmail.com',
+    port:587,
+    secure:false,
     auth: {
       user: process.env.EMAIL,
       pass: process.env.PASS,
@@ -340,22 +342,22 @@ router.post('/sendpasswordlink', async (req, res) => {
   }
 })
 
-router.get('/forgotpassword/:token', async (req, res) => {
-  const { token } = req.params
-  try {
-    const decodedToken = jwt.verify(token, process.env.USER_KEY);
-    const userId = decodedToken.id;
-    const teacher = await Teacher.findOne({ _id: userId })
-    const student = await Student.findOne({ _id: userId })
-    if (teacher || student) {
-      res.status(200).json(teacher || student)
-    } else {
-      res.status(401).json({ error: "user not exist" })
+  router.get('/forgotpassword/:token', async (req, res) => {
+    const { token } = req.params
+    try {
+      const decodedToken = jwt.verify(token, process.env.USER_KEY);
+      const userId = decodedToken.id;
+      const teacher = await Teacher.findOne({ _id: userId })
+      const student = await Student.findOne({ _id: userId })
+      if (teacher || student) {
+        res.status(200).json(teacher || student)
+      } else {
+        res.status(401).json({ error: "user not exist" })
+      }
+    } catch (error) {
+      console.log(error)
     }
-  } catch (error) {
-    console.log(error)
-  }
-})
+  })
 
 router.post('/:token', async (req, res) => {
   const { Password } = req.body;

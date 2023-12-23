@@ -13,7 +13,7 @@ router.get('/', function (req, res, next) {
 /* Registering teachers */
 router.post('/register', async (req, res) => {
   try {
-    const { name, email, password, subjects, classes } = req.body;
+    const { name, email, password, Subject, classes } = req.body;
 
     // Check if teacher already exists
     let existingTeacher = await Teacher.findOne({ email });
@@ -26,7 +26,7 @@ router.post('/register', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // Create new teacher
-    const newTeacher = new Teacher({ name, email, password: hashedPassword, subjects });
+    const newTeacher = new Teacher({ name, email, password: hashedPassword,Subject });
 
     // Save teacher to database
     const user = await newTeacher.save();
